@@ -1,4 +1,4 @@
-# AgentKit
+# Agentscape
 
 A library of re-useable agent templates.
 
@@ -6,8 +6,8 @@ A library of re-useable agent templates.
 
 ```bash
 # List all available agent templates.
-$ agentkit list
+$ uvx agentscape list
 
 # Add an AI agent template to your project.
-$ agentkit add <agent>
+$ uvx agentscape add <agent>
 ```
