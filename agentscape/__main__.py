@@ -34,11 +34,13 @@ print(result.final_output)[/dim]"""
 
 def get_available_agents():
     """Get a list of available agent names."""
-    return [
-        path.stem
-        for path in AGENTS_DIR.glob("*.py")
-        if path.is_file() and not path.stem.startswith("_")
-    ]
+    return sorted(
+        [
+            path.stem
+            for path in AGENTS_DIR.glob("*.py")
+            if path.is_file() and not path.stem.startswith("_")
+        ]
+    )
 
 
 @app.callback(invoke_without_command=True)
