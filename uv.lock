@@ -14,14 +14,23 @@ dependencies = [
     { name = "typer" },
 ]
 
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "openai-agents", specifier = ">=0.0.4" },
-    { name = "pydantic-ai", specifier = ">=0.0.39" },
+    { name = "pydantic-ai", specifier = ">=0.0.40" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.5" },
     { name = "questionary", specifier = ">=2.1.0" },
     { name = "rich", specifier = ">=13.9.4" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11.0" },
     { name = "typer", specifier = ">=0.15.2" },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "annotated-types"
@@ -392,6 +401,15 @@ wheels = [
 ]
 
 [[package]]
+name = "iniconfig"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/4b/cbd8e699e64a6f16ca3a8220661b5f83792b3017d0f79807cb8708d33913/iniconfig-2.0.0.tar.gz", hash = "sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3", size = 4646 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ef/a6/62565a6e1cf69e10f5727360368e451d4b7f58beeac6173dc9db836a5b46/iniconfig-2.0.0-py3-none-any.whl", hash = "sha256:b6a85871a79d2e3b22d2d1b94ac2824226a63c6b741c88f7ae975f18b6778374", size = 5892 },
+]
+
+[[package]]
 name = "jiter"
 version = "0.9.0"
 source = { registry = "https://pypi.org/simple" }
@@ -559,6 +577,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pluggy"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/96/2d/02d4312c973c6050a18b314a5ad0b3210edb65a906f868e31c111dede4a6/pluggy-1.5.0.tar.gz", hash = "sha256:2cffa88e94fdc978c4c574f15f9e59b7f4201d439195c3715ca9e2486f1d0cf1", size = 67955 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/88/5f/e351af9a41f866ac3f1fac4ca0613908d9a41741cfcf2228f4ad853b697d/pluggy-1.5.0-py3-none-any.whl", hash = "sha256:44e1ad92c8ca002de6377e165f3e0f1be63266ab4d554740532335b9d75ea669", size = 20556 },
+]
+
+[[package]]
 name = "prompt-toolkit"
 version = "3.0.50"
 source = { registry = "https://pypi.org/simple" }
@@ -607,19 +634,19 @@ wheels = [
 
 [[package]]
 name = "pydantic-ai"
-version = "0.0.39"
+version = "0.0.40"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic-ai-slim", extra = ["anthropic", "bedrock", "cli", "cohere", "groq", "mistral", "openai", "vertexai"] },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/05/8f/645a2135b63a43048ad44d2db5ee49270a7aaac2251dfb66bd2e77c5de45/pydantic_ai-0.0.39.tar.gz", hash = "sha256:347f8d9bfcf69b299bc9a9f7a4070485d94e777bcafa26244c86410856d0b25d", size = 11749160 }
+sdist = { url = "https://files.pythonhosted.org/packages/e4/ab/e3e29d857b254dad7b03e81830f4ddd6d91254026ef58ad3c0f8fe776ce9/pydantic_ai-0.0.40.tar.gz", hash = "sha256:db4ac09b8590cdf232190bad2203ce37b12057ad35b93fb305f06fbcb3245e1e", size = 11753135 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1f/8e/f25bab357740f946ec4676d9b9668daa287b6a80198b73f711997ad07f3b/pydantic_ai-0.0.39-py3-none-any.whl", hash = "sha256:812a64124d486975aac90cd2a33aa8bb46b382405b39e4efcedcfca16d5f8ae9", size = 9735 },
+    { url = "https://files.pythonhosted.org/packages/2d/d3/95934fe93139abe506ee52c24f4f6cb38f49d9df4fca2168c94168ec074e/pydantic_ai-0.0.40-py3-none-any.whl", hash = "sha256:d7cb87e3dafc3723ededa70e741c705fa588cb49ab7a1960c0f11c58aab2cc6c", size = 9738 },
 ]
 
 [[package]]
 name = "pydantic-ai-slim"
-version = "0.0.39"
+version = "0.0.40"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "eval-type-backport" },
@@ -630,9 +657,9 @@ dependencies = [
     { name = "pydantic-graph" },
     { name = "typing-inspection" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/05/89/b13b971bed40d82a37e45b997c8f9501a866631ea4b5f0efa15c0f18f32c/pydantic_ai_slim-0.0.39.tar.gz", hash = "sha256:021eb42e59ad3a69af994c3fab086433246567b10e296300ca6fc2508b7342ce", size = 101740 }
+sdist = { url = "https://files.pythonhosted.org/packages/c7/dd/80691c895301e87a89bfa6f766aa5c445787733992e5e88208d8fc6ab546/pydantic_ai_slim-0.0.40.tar.gz", hash = "sha256:f143f3ec6c2894a1d9f177a3a46c4a0bbe5b765ae84319d54d0695320dab17ad", size = 102121 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/78/c6/0079a2e477e91aba21c349e4e749d99cbd29f7762635c1fd1d2988449a0d/pydantic_ai_slim-0.0.39-py3-none-any.whl", hash = "sha256:3666a55f68910cf10dec9424f6b6f6bc4980d3373153867a3f10d2a6e7ecaae7", size = 132851 },
+    { url = "https://files.pythonhosted.org/packages/c6/e6/acfc882155c113887d4cea799ece2e73d697a7c544ffdf4c4c3de6d4dd09/pydantic_ai_slim-0.0.40-py3-none-any.whl", hash = "sha256:5b67312dd50c0954105553dcf1ad9b0f02a9bfae1937a2a25ede21b038395aa8", size = 134197 },
 ]
 
 [package.optional-dependencies]
@@ -705,7 +732,7 @@ wheels = [
 
 [[package]]
 name = "pydantic-graph"
-version = "0.0.39"
+version = "0.0.40"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -713,9 +740,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "typing-inspection" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/13/3e/10d578060fb45a59d89bee8a8cae8e1923186bfeef5bfe43bbc50fe389b8/pydantic_graph-0.0.39.tar.gz", hash = "sha256:a79a77912a99e77ee31d2f66b952a8706706d2bb805d7f43069f6376c625130c", size = 16132 }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/87/81a84c4e120973f0183d71b2452ad5c539aad4a65280911072b8165df674/pydantic_graph-0.0.40.tar.gz", hash = "sha256:0dd25950e5c6c943a25acf01e2b5c5b17ba32c554ea7d783aa2a036f700ea52e", size = 20234 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f8/b1/fdaa29f0c41f5073068491f175dae6bf75dc7c4d747049d4ce390e9f2f12/pydantic_graph-0.0.39-py3-none-any.whl", hash = "sha256:826d431532854d943041fdda9687fa39fa6534ac2be5883524742aff5df83e2c", size = 19343 },
+    { url = "https://files.pythonhosted.org/packages/61/21/4d154a33eb7fe61fd6325aee3adcb8cb35b5fa62917281464c7556613058/pydantic_graph-0.0.40-py3-none-any.whl", hash = "sha256:02d7465ac824971b03017117b81b756e7763b1406c1e13f330bb8e78e299ce4b", size = 25726 },
 ]
 
 [[package]]
@@ -725,6 +752,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/7c/2d/c3338d48ea6cc0feb8446d8e6937e1408088a72a39937982cc6111d17f84/pygments-2.19.1.tar.gz", hash = "sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f", size = 4968581 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8a/0b/9fcc47d19c48b59121088dd6da2488a49d5f72dacf8262e2790a1d2c7d15/pygments-2.19.1-py3-none-any.whl", hash = "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c", size = 1225293 },
+]
+
+[[package]]
+name = "pytest"
+version = "8.3.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "iniconfig" },
+    { name = "packaging" },
+    { name = "pluggy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ae/3c/c9d525a414d506893f0cd8a8d0de7706446213181570cdbd766691164e40/pytest-8.3.5.tar.gz", hash = "sha256:f4efe70cc14e511565ac476b57c279e12a855b11f48f212af1080ef2263d3845", size = 1450891 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/30/3d/64ad57c803f1fa1e963a7946b6e0fea4a70df53c1a7fed304586539c2bac/pytest-8.3.5-py3-none-any.whl", hash = "sha256:c69214aa47deac29fad6c2a4f590b9c4a9fdb16a403176fe154b79c0b4d4d820", size = 343634 },
 ]
 
 [[package]]
@@ -815,6 +857,31 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/aa/65/7d973b89c4d2351d7fb232c2e452547ddfa243e93131e7cfa766da627b52/rsa-4.9.tar.gz", hash = "sha256:e38464a49c6c85d7f1351b0126661487a7e0a14a50f1675ec50eb34d4f20ef21", size = 29711 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/49/97/fa78e3d2f65c02c8e1268b9aba606569fe97f6c8f7c2d74394553347c145/rsa-4.9-py3-none-any.whl", hash = "sha256:90260d9058e514786967344d0ef75fa8727eed8a7d2e43ce9f4bcf1b536174f7", size = 34315 },
+]
+
+[[package]]
+name = "ruff"
+version = "0.11.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/77/2b/7ca27e854d92df5e681e6527dc0f9254c9dc06c8408317893cf96c851cdd/ruff-0.11.0.tar.gz", hash = "sha256:e55c620690a4a7ee6f1cccb256ec2157dc597d109400ae75bbf944fc9d6462e2", size = 3799407 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/48/40/3d0340a9e5edc77d37852c0cd98c5985a5a8081fc3befaeb2ae90aaafd2b/ruff-0.11.0-py3-none-linux_armv6l.whl", hash = "sha256:dc67e32bc3b29557513eb7eeabb23efdb25753684b913bebb8a0c62495095acb", size = 10098158 },
+    { url = "https://files.pythonhosted.org/packages/ec/a9/d8f5abb3b87b973b007649ac7bf63665a05b2ae2b2af39217b09f52abbbf/ruff-0.11.0-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:38c23fd9bdec4eb437b4c1e3595905a0a8edfccd63a790f818b28c78fe345639", size = 10879071 },
+    { url = "https://files.pythonhosted.org/packages/ab/62/aaa198614c6211677913ec480415c5e6509586d7b796356cec73a2f8a3e6/ruff-0.11.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:7c8661b0be91a38bd56db593e9331beaf9064a79028adee2d5f392674bbc5e88", size = 10247944 },
+    { url = "https://files.pythonhosted.org/packages/9f/52/59e0a9f2cf1ce5e6cbe336b6dd0144725c8ea3b97cac60688f4e7880bf13/ruff-0.11.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b6c0e8d3d2db7e9f6efd884f44b8dc542d5b6b590fc4bb334fdbc624d93a29a2", size = 10421725 },
+    { url = "https://files.pythonhosted.org/packages/a6/c3/dcd71acc6dff72ce66d13f4be5bca1dbed4db678dff2f0f6f307b04e5c02/ruff-0.11.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:3c3156d3f4b42e57247275a0a7e15a851c165a4fc89c5e8fa30ea6da4f7407b8", size = 9954435 },
+    { url = "https://files.pythonhosted.org/packages/a6/9a/342d336c7c52dbd136dee97d4c7797e66c3f92df804f8f3b30da59b92e9c/ruff-0.11.0-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:490b1e147c1260545f6d041c4092483e3f6d8eba81dc2875eaebcf9140b53905", size = 11492664 },
+    { url = "https://files.pythonhosted.org/packages/84/35/6e7defd2d7ca95cc385ac1bd9f7f2e4a61b9cc35d60a263aebc8e590c462/ruff-0.11.0-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:1bc09a7419e09662983b1312f6fa5dab829d6ab5d11f18c3760be7ca521c9329", size = 12207856 },
+    { url = "https://files.pythonhosted.org/packages/22/78/da669c8731bacf40001c880ada6d31bcfb81f89cc996230c3b80d319993e/ruff-0.11.0-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:bcfa478daf61ac8002214eb2ca5f3e9365048506a9d52b11bea3ecea822bb844", size = 11645156 },
+    { url = "https://files.pythonhosted.org/packages/ee/47/e27d17d83530a208f4a9ab2e94f758574a04c51e492aa58f91a3ed7cbbcb/ruff-0.11.0-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:6fbb2aed66fe742a6a3a0075ed467a459b7cedc5ae01008340075909d819df1e", size = 13884167 },
+    { url = "https://files.pythonhosted.org/packages/9f/5e/42ffbb0a5d4b07bbc642b7d58357b4e19a0f4774275ca6ca7d1f7b5452cd/ruff-0.11.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:92c0c1ff014351c0b0cdfdb1e35fa83b780f1e065667167bb9502d47ca41e6db", size = 11348311 },
+    { url = "https://files.pythonhosted.org/packages/c8/51/dc3ce0c5ce1a586727a3444a32f98b83ba99599bb1ebca29d9302886e87f/ruff-0.11.0-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:e4fd5ff5de5f83e0458a138e8a869c7c5e907541aec32b707f57cf9a5e124445", size = 10305039 },
+    { url = "https://files.pythonhosted.org/packages/60/e0/475f0c2f26280f46f2d6d1df1ba96b3399e0234cf368cc4c88e6ad10dcd9/ruff-0.11.0-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:96bc89a5c5fd21a04939773f9e0e276308be0935de06845110f43fd5c2e4ead7", size = 9937939 },
+    { url = "https://files.pythonhosted.org/packages/e2/d3/3e61b7fd3e9cdd1e5b8c7ac188bec12975c824e51c5cd3d64caf81b0331e/ruff-0.11.0-py3-none-musllinux_1_2_i686.whl", hash = "sha256:a9352b9d767889ec5df1483f94870564e8102d4d7e99da52ebf564b882cdc2c7", size = 10923259 },
+    { url = "https://files.pythonhosted.org/packages/30/32/cd74149ebb40b62ddd14bd2d1842149aeb7f74191fb0f49bd45c76909ff2/ruff-0.11.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:049a191969a10897fe052ef9cc7491b3ef6de79acd7790af7d7897b7a9bfbcb6", size = 11406212 },
+    { url = "https://files.pythonhosted.org/packages/00/ef/033022a6b104be32e899b00de704d7c6d1723a54d4c9e09d147368f14b62/ruff-0.11.0-py3-none-win32.whl", hash = "sha256:3191e9116b6b5bbe187447656f0c8526f0d36b6fd89ad78ccaad6bdc2fad7df2", size = 10310905 },
+    { url = "https://files.pythonhosted.org/packages/ed/8a/163f2e78c37757d035bd56cd60c8d96312904ca4a6deeab8442d7b3cbf89/ruff-0.11.0-py3-none-win_amd64.whl", hash = "sha256:c58bfa00e740ca0a6c43d41fb004cd22d165302f360aaa56f7126d544db31a21", size = 11411730 },
+    { url = "https://files.pythonhosted.org/packages/4e/f7/096f6efabe69b49d7ca61052fc70289c05d8d35735c137ef5ba5ef423662/ruff-0.11.0-py3-none-win_arm64.whl", hash = "sha256:868364fc23f5aa122b00c6f794211e85f7e78f5dffdf7c590ab90b8c4e69b657", size = 10538956 },
 ]
 
 [[package]]

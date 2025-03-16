@@ -6,8 +6,8 @@ def get_weather(city: str) -> str:
     return f"The weather in {city} is sunny."
 
 
-agent = Agent(
-    name="Hello world",
-    instructions="You are a helpful agent.",
+weather_agent = Agent(
+    name="Weather agent",
+    instructions="You are a helpful assistant providing weather information.",
     tools=[get_weather],
 )

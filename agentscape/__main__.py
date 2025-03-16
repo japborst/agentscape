@@ -37,17 +37,46 @@ def ensure_agents_dir():
     return agents_dir
 
 
-def example_usage(target_path: Path):
+def example_usage(target_path: Path, agent: str):
     """Return an example of how to use the installed agent."""
     project_root = get_project_root()
     import_path = str(target_path.relative_to(project_root).with_suffix("")).replace(
         "/", "."
     )
-    return f"""[dim]from {import_path} import agent
+    return f"""[dim]from {import_path} import {agent}
 
 # Run the agent
-result = Runner.run(agent, "Your prompt here")
+result = Runner.run({agent}, "Your prompt here")
 print(result.final_output)[/dim]"""
+
+
+def get_available_agents():
+    """Get a list of available agent names."""
+    return [
+        path.stem
+        for path in TEMPLATES_DIR.glob("*.py")
+        if path.is_file() and not path.stem.startswith("_")
+    ]
+
+
+@app.callback(invoke_without_command=True)
+def main(ctx: typer.Context):
+    """Main command that shows available agents when no command is specified."""
+    if ctx.invoked_subcommand is None:
+        available_agents = get_available_agents()
+
+        if not available_agents:
+            rprint("[yellow]No available agents available[/yellow]")
+            raise typer.Exit()
+
+        agent = questionary.select(
+            "Which agent would you like to install?", choices=available_agents
+        ).ask()
+
+        if agent:
+            ctx.invoke(add, agent=agent, destination=None)
+        else:
+            raise typer.Exit()
 
 
 @app.command()
@@ -76,7 +105,7 @@ def add(
         target_path.write_text(source_path.read_text())
 
         rprint(f"[green]✓[/green] Added {agent} agent to {target_path}")
-        rprint(Panel(example_usage(target_path), title="Example usage"))
+        rprint(Panel(example_usage(target_path, agent), title="Example usage"))
 
     except Exception as e:
         rprint(f"[red]Error:[/red] {str(e)}")
@@ -85,24 +114,18 @@ def add(
 
 @app.command()
 def list():
-    """List all available agent templates."""
+    """List all available agents."""
     try:
-        available_templates = [
-            path.stem
-            for path in TEMPLATES_DIR.glob("*.py")
-            if path.is_file() and not path.stem.startswith("_")
-        ]
+        available_agents = get_available_agents()
 
-        if not available_templates:
-            rprint("[yellow]No available agent templates[/yellow]")
+        if not available_agents:
+            rprint("[yellow]No available agents[/yellow]")
             raise typer.Exit()
 
         rprint(
             Panel(
-                "\n".join(
-                    f"[blue]•[/blue] {template}" for template in available_templates
-                ),
-                title="Available Agent Templates",
+                "\n".join(f"[blue]•[/blue] {agent}" for agent in available_agents),
+                title="Available Agents",
                 border_style="blue",
             )
         )
@@ -110,7 +133,6 @@ def list():
     except Exception as e:
         rprint(f"[red]Error:[/red] {str(e)}")
         raise typer.Exit(1)
-
 
 if __name__ == "__main__":
     app()
