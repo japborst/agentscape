@@ -7,6 +7,9 @@ from rich import print as rprint
 from rich.console import Console
 from rich.panel import Panel
 
+from agentscape import AGENTS_DIR
+from agentscape.project import get_agents_dir, get_project_root
+
 app = typer.Typer(
     name="agentkit",
     help="A modern CLI tool for installing AI agent components",
@@ -14,27 +17,6 @@ app = typer.Typer(
 )
 
 console = Console()
-
-TEMPLATES_DIR = Path(__file__).parent / "agents"
-
-
-def get_project_root() -> Path:
-    """Find the project root directory."""
-    current = Path.cwd()
-    while current != current.parent:
-        if (current / "pyproject.toml").exists():
-            return current
-        current = current.parent
-    raise typer.BadParameter("Could not find project root (pyproject.toml)")
-
-
-def ensure_agents_dir():
-    """Ensure the components directory exists in the project."""
-    project_root = get_project_root()
-    agents_dir = project_root / "agents"
-    agents_dir.mkdir(exist_ok=True)
-
-    return agents_dir
 
 
 def example_usage(target_path: Path, agent: str):
@@ -54,7 +36,7 @@ def get_available_agents():
     """Get a list of available agent names."""
     return [
         path.stem
-        for path in TEMPLATES_DIR.glob("*.py")
+        for path in AGENTS_DIR.glob("*.py")
         if path.is_file() and not path.stem.startswith("_")
     ]
 
@@ -74,13 +56,13 @@ def main(ctx: typer.Context):
         ).ask()
 
         if agent:
-            ctx.invoke(add, agent=agent, destination=None)
+            ctx.invoke(add_agent, agent=agent, destination=None)
         else:
             raise typer.Exit()
 
 
-@app.command()
-def add(
+@app.command("add")
+def add_agent(
     agent: str = typer.Argument(..., help="Name of the agent to add"),
     destination: Optional[str] = typer.Option(
         None, "--dest", "-d", help="Custom destination directory"
@@ -88,7 +70,7 @@ def add(
 ):
     """Add an AI agent component to your project."""
     try:
-        target_dir = ensure_agents_dir() if not destination else Path(destination)
+        target_dir = get_agents_dir() if not destination else Path(destination)
         target_dir.mkdir(parents=True, exist_ok=True)
         target_path = target_dir / f"{agent}.py"
 
@@ -101,10 +83,12 @@ def add(
                 rprint("[yellow]Operation cancelled[/yellow]")
                 raise typer.Exit()
 
-        source_path = TEMPLATES_DIR / f"{agent}.py"
+        source_path = AGENTS_DIR / f"{agent}.py"
         target_path.write_text(source_path.read_text())
 
-        rprint(f"[green]✓[/green] Added {agent} agent to {target_path}")
+        relative_target_path = target_path.relative_to(Path.cwd())
+
+        rprint(f"[green]✓[/green] Added {agent} agent to {relative_target_path}")
         rprint(Panel(example_usage(target_path, agent), title="Example usage"))
 
     except Exception as e:
@@ -112,8 +96,8 @@ def add(
         raise typer.Exit(1)
 
 
-@app.command()
-def list():
+@app.command("list")
+def list_agents():
     """List all available agents."""
     try:
         available_agents = get_available_agents()
@@ -133,6 +117,7 @@ def list():
     except Exception as e:
         rprint(f"[red]Error:[/red] {str(e)}")
         raise typer.Exit(1)
+
 
 if __name__ == "__main__":
     app()
