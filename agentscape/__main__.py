@@ -7,11 +7,12 @@ from rich import print as rprint
 from rich.console import Console
 from rich.panel import Panel
 
-from agentscape import AGENTS_DIR
-from agentscape.project import get_agents_dir, get_project_root
+from agentscape import AGENTS_DIR, TOOLS_DIR
+from agentscape.models import ComponentType
+from agentscape.project import get_component_dir, get_project_root
 
 app = typer.Typer(
-    name="agentkit",
+    name="agentscape",
     help="A modern CLI tool for installing AI agent components",
     add_completion=False,
 )
@@ -32,12 +33,13 @@ result = Runner.run({agent}, "Your prompt here")
 print(result.final_output)[/dim]"""
 
 
-def get_available_agents():
-    """Get a list of available agent names."""
+def get_available_components(component_type: ComponentType) -> list[str]:
+    """Get a list of available component names."""
+    directory = AGENTS_DIR if component_type == ComponentType.AGENTS else TOOLS_DIR
     return sorted(
         [
             path.stem
-            for path in AGENTS_DIR.glob("*.py")
+            for path in directory.glob("*.py")
             if path.is_file() and not path.stem.startswith("_")
         ]
     )
@@ -45,53 +47,81 @@ def get_available_agents():
 
 @app.callback(invoke_without_command=True)
 def main(ctx: typer.Context):
-    """Main command that shows available agents when no command is specified."""
+    """Main command that shows available components when no command is specified."""
     if ctx.invoked_subcommand is None:
-        available_agents = get_available_agents()
-
-        if not available_agents:
-            rprint("[yellow]No available agents available[/yellow]")
-            raise typer.Exit()
-
-        agent = questionary.select(
-            "Which agent would you like to install?", choices=available_agents
+        component_type = questionary.select(
+            "What would you like to install?",
+            choices=[c.value for c in ComponentType],
         ).ask()
 
-        if agent:
-            ctx.invoke(add_agent, agent=agent, destination=None)
+        if not component_type:
+            raise typer.Exit()
+
+        component_type_enum = ComponentType(component_type)
+        available_items = get_available_components(component_type_enum)
+
+        if not available_items:
+            rprint(f"[yellow]No available {component_type}[/yellow]")
+            raise typer.Exit()
+
+        component = questionary.select(
+            f"Which {component_type[:-1]} would you like to install?",
+            choices=available_items,
+        ).ask()
+
+        if component:
+            ctx.invoke(
+                add_component,
+                name=component,
+                component_type=ComponentType(component_type),
+                destination=None,
+            )
         else:
             raise typer.Exit()
 
 
 @app.command("add")
-def add_agent(
-    agent: str = typer.Argument(..., help="Name of the agent to add"),
+def add_component(
+    component_type: ComponentType = typer.Argument(
+        ComponentType.AGENTS,
+        help="Type of component to add",
+        case_sensitive=False,
+    ),
+    name: str = typer.Argument(..., help="Name of the component to add"),
     destination: Optional[str] = typer.Option(
         None, "--dest", "-d", help="Custom destination directory"
     ),
 ):
-    """Add an AI agent component to your project."""
+    """Add an AI agent or tool to your project."""
     try:
-        target_dir = get_agents_dir() if not destination else Path(destination)
+        target_dir = (
+            get_component_dir(component_type) if not destination else Path(destination)
+        )
         target_dir.mkdir(parents=True, exist_ok=True)
-        target_path = target_dir / f"{agent}.py"
+        target_path = target_dir / f"{name}.py"
 
         if target_path.exists():
             overwrite = questionary.confirm(
-                f"Agent {agent} already exists. Overwrite?", default=False
+                f"{component_type.value[:-1].title()} {name} already exists. Overwrite?",
+                default=False,
             ).ask()
 
             if not overwrite:
                 rprint("[yellow]Operation cancelled[/yellow]")
                 raise typer.Exit()
 
-        source_path = AGENTS_DIR / f"{agent}.py"
+        source_dir = AGENTS_DIR if component_type == ComponentType.AGENTS else TOOLS_DIR
+        source_path = source_dir / f"{name}.py"
         target_path.write_text(source_path.read_text())
 
         relative_target_path = target_path.relative_to(Path.cwd())
+        component_name = component_type.value[:-1]
 
-        rprint(f"[green]✓[/green] Added {agent} agent to {relative_target_path}")
-        rprint(Panel(example_usage(target_path, agent), title="Example usage"))
+        rprint(
+            f"[green]✓[/green] Added {component_name} {name} to {relative_target_path}"
+        )
+        if component_type == ComponentType.AGENTS:
+            rprint(Panel(example_usage(target_path, name), title="Example usage"))
 
     except Exception as e:
         rprint(f"[red]Error:[/red] {str(e)}")
@@ -99,19 +129,24 @@ def add_agent(
 
 
 @app.command("list")
-def list_agents():
-    """List all available agents."""
+def list_components(
+    component_type: ComponentType = typer.Argument(
+        ComponentType.AGENTS,
+        case_sensitive=False,
+    ),
+):
+    """List all available agents or tools."""
     try:
-        available_agents = get_available_agents()
+        available_items = get_available_components(component_type)
 
-        if not available_agents:
-            rprint("[yellow]No available agents[/yellow]")
+        if not available_items:
+            rprint(f"[yellow]No available {component_type.value}[/yellow]")
             raise typer.Exit()
 
         rprint(
             Panel(
-                "\n".join(f"[blue]•[/blue] {agent}" for agent in available_agents),
-                title="Available Agents",
+                "\n".join(f"[blue]•[/blue] {item}" for item in available_items),
+                title=f"Available {component_type.value.title()}",
                 border_style="blue",
             )
         )

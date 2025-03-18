@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from agentscape.__main__ import ComponentType
+
 
 def find_nearest_python_file(start_dir: Path) -> Path | None:
     """Find the Python file closest to the given directory.
@@ -63,9 +65,22 @@ def get_project_root() -> Path:
     return project_root or current
 
 
-def get_agents_dir():
+def get_agents_dir() -> Path:
     """Ensure the components directory exists in the project."""
     agents_dir = get_project_root() / "agents"
     agents_dir.mkdir(exist_ok=True)
-
     return agents_dir
+
+
+def get_tools_dir() -> Path:
+    """Ensure the tools directory exists in the project."""
+    tools_dir = get_agents_dir() / "tools"
+    tools_dir.mkdir(exist_ok=True)
+    return tools_dir
+
+
+def get_component_dir(component_type: ComponentType) -> Path:
+    """Get the appropriate directory for a component type."""
+    return (
+        get_tools_dir() if component_type == ComponentType.TOOLS else get_agents_dir()
+    )

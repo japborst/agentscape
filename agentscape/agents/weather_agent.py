@@ -1,10 +1,6 @@
-from agents import Agent, function_tool
+from agents import Agent
 
-
-@function_tool
-def get_weather(city: str) -> str:
-    return f"The weather in {city} is sunny."
-
+from .tools.get_weather import get_weather
 
 weather_agent = Agent(
     name="Weather agent",
