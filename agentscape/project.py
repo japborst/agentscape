@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from agentscape.__main__ import ComponentType
+from agentscape.models import ComponentType
 
 
 def find_nearest_python_file(start_dir: Path) -> Path | None:

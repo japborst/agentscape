@@ -93,39 +93,32 @@ def add_component(
     ),
 ):
     """Add an AI agent or tool to your project."""
-    try:
-        target_dir = (
-            get_component_dir(component_type) if not destination else Path(destination)
-        )
-        target_dir.mkdir(parents=True, exist_ok=True)
-        target_path = target_dir / f"{name}.py"
+    target_dir = (
+        get_component_dir(component_type) if not destination else Path(destination)
+    )
+    target_dir.mkdir(parents=True, exist_ok=True)
+    target_path = target_dir / f"{name}.py"
 
-        if target_path.exists():
-            overwrite = questionary.confirm(
-                f"{component_type.value[:-1].title()} {name} already exists. Overwrite?",
-                default=False,
-            ).ask()
+    if target_path.exists():
+        overwrite = questionary.confirm(
+            f"{component_type.value[:-1].title()} {name} already exists. Overwrite?",
+            default=False,
+        ).ask()
 
-            if not overwrite:
-                rprint("[yellow]Operation cancelled[/yellow]")
-                raise typer.Exit()
+        if not overwrite:
+            rprint("[yellow]Operation cancelled[/yellow]")
+            raise typer.Exit()
 
-        source_dir = AGENTS_DIR if component_type == ComponentType.AGENTS else TOOLS_DIR
-        source_path = source_dir / f"{name}.py"
-        target_path.write_text(source_path.read_text())
+    source_dir = AGENTS_DIR if component_type == ComponentType.AGENTS else TOOLS_DIR
+    source_path = source_dir / f"{name}.py"
+    target_path.write_text(source_path.read_text())
 
-        relative_target_path = target_path.relative_to(Path.cwd())
-        component_name = component_type.value[:-1]
+    relative_target_path = target_path.relative_to(Path.cwd())
+    component_name = component_type.value[:-1]
 
-        rprint(
-            f"[green]✓[/green] Added {component_name} {name} to {relative_target_path}"
-        )
-        if component_type == ComponentType.AGENTS:
-            rprint(Panel(example_usage(target_path, name), title="Example usage"))
-
-    except Exception as e:
-        rprint(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(1)
+    rprint(f"[green]✓[/green] Added {component_name} {name} to {relative_target_path}")
+    if component_type == ComponentType.AGENTS:
+        rprint(Panel(example_usage(target_path, name), title="Example usage"))
 
 
 @app.command("list")
@@ -136,25 +129,24 @@ def list_components(
     ),
 ):
     """List all available agents or tools."""
-    try:
-        available_items = get_available_components(component_type)
+    available_items = get_available_components(component_type)
 
-        if not available_items:
-            rprint(f"[yellow]No available {component_type.value}[/yellow]")
-            raise typer.Exit()
+    if not available_items:
+        rprint(f"[yellow]No available {component_type.value}[/yellow]")
+        raise typer.Exit()
 
-        rprint(
-            Panel(
-                "\n".join(f"[blue]•[/blue] {item}" for item in available_items),
-                title=f"Available {component_type.value.title()}",
-                border_style="blue",
-            )
+    rprint(
+        Panel(
+            "\n".join(f"[blue]•[/blue] {item}" for item in available_items),
+            title=f"Available {component_type.value.title()}",
+            border_style="blue",
         )
-
-    except Exception as e:
-        rprint(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(1)
+    )
 
 
 if __name__ == "__main__":
-    app()
+    try:
+        app()
+    except Exception as e:
+        rprint(f"[red]Error:[/red] {str(e)}")
+        raise typer.Exit(1)
